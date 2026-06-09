@@ -51,7 +51,7 @@ export async function POST() {
       [
         sql`INSERT INTO branches (branch_name, connection_string) VALUES (${new_branch_id}, ${new_branch_connection_string})`,
         client?.publishJSON({
-          url: 'https://neon-demos-outage.vercel.app/project/clean',
+          url: 'https://neon-demo-outage.vercel.app/project/clean',
           body: { new_branch_id },
           delay: 30 * 60,
           retries: 0,
