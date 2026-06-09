@@ -50,13 +50,13 @@ async function createSchema() {
 }
 
 async function insertSeedData() {
-  const users = await sql<UserRow[]>`
+  const users = (await sql`
     INSERT INTO users (username, display_name, avatar_url, bio) VALUES
       ('neon', 'Neon', 'neon', 'Serverless Postgres for modern apps'),
       ('postgres', 'PostgreSQL', 'postgres', 'The world''s most advanced open source database'),
       ('devrel', 'DevRel', 'devrel', 'Building demos that ship at the speed of light')
     RETURNING id, username
-  `
+  `) as UserRow[]
 
   const userIdByUsername = new Map(users.map((user) => [user.username, user.id]))
 
@@ -104,7 +104,7 @@ async function loadFromCsv() {
   const artistToUserId = new Map<string, number>()
   const usernames = new Set<string>()
   let counter = 0
-  let batch: ReturnType<typeof sql>[] = []
+  let batch: any[] = []
 
   const flush = async () => {
     if (batch.length === 0) return
@@ -122,11 +122,11 @@ async function loadFromCsv() {
     while (usernames.has(username)) username = generateUsername()
     usernames.add(username)
 
-    const [user] = await sql<UserRow[]>`
+    const [user] = (await sql`
       INSERT INTO users (username, display_name, avatar_url, bio)
       VALUES (${username}, ${artist}, ${username}, ${`Fan of ${artist}`})
       RETURNING id, username
-    `
+    `) as UserRow[]
 
     artistToUserId.set(key, user.id)
     return user.id
