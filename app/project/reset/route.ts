@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     )
     await Promise.allSettled([
       client?.publishJSON({
-        url: 'https://neon-demos-outage.vercel.app/project/clean',
+        url: 'https://neon-demo-outage.vercel.app/project/clean',
         body: { new_branch_id: tmp['branches'][0].id },
         delay: 30 * 60,
         retries: 0,
